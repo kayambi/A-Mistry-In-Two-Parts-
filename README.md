@@ -1,55 +1,198 @@
-# KickStart My Chart
-
-# Background
-
-Over two billion dollars have been raised using the massively successful crowdfunding service, Kickstarter, but not every project has found success. Of the over 300,000 projects launched on Kickstarter, only a third have made it through the funding process with a positive outcome.
-
-Since getting funded on Kickstarter requires meeting or exceeding the project's initial goal, many organizations spend months looking through past projects in an attempt to discover some trick to finding success.
-
-# Objectives
-
-Using Excel, modify and analyze the data of four thousand past Kickstarter projects in order to uncover market trends by examining funding processes and success rates.
-
-# Conclusions
-
-Within the data provided there are numerous conclusions that could be made about KickStarter campaigns. At first glance, KickSarter projects are 53% more likely to be successful than to fail at 37% (or get cancelled at 8%, and the remaining live).
-
-Category Analysis:
-Categorically, KickStarter campaigns in music, theater as well as film & video have the highest success rates at 82%, 63% and 62.5% respectively. While on the other end of the spectrum, food, games and publishing categories have lower success rates at 19.5%, 36% and 39%. Another noteworthy observation is that technology not only has the highest cancelation rate (almost 1/3 of the time) but are the most canceled category, comprising of more than 50% of all category cancelations combined.
-
-Put the picture here. 
-
-# Sub-Category Analysis:
-Observing the individual sub-categories within the KickStarter campaigns we can see interesting patterns of outcomes.
-Firstly, the sub-categories with 100% success rates are: classical music, documentaries, electronic music, hardware, metal, non-fiction, pop, radio & podcasts, rock, shorts, small batch, table top games and television.
-Secondly, and alternatively, sub-categories with 100% failure or cancelation rates are: animation, art books, audio, children’s books, drama, fiction, food trucks, gadgets, jazz, mobile games, nature, people, places, restaurants, science fiction, translations, videogames and web.
-A conclusion about KickStarter campaign sub-categories would be that plays are the most campaigned and popular while contributing the most to theater’s highest category success rate at 83%.
-
-Put another Picture here . 
-
-# Seasonality:
-Analysis shows the highest success rate is in May at 61% across all categories while December has the lowest success rate at 44%. Notably, February and April also have comparative success rates at 60% each.
-May (halfway through Q2) success rates for all categories peak and then continue to steadily decline until September (end the of Q3), only to briefly spike back up and level out until declining sharply from November to December.
-Interestingly, the gap between successful and failed closes in December (actually intersecting), and failures surpass successes for the 1st time.
-
-put another picture here 
-
-# Limitations
-
-The dataset is not large enough therefore the sample size could also be a limitation. Without knowing that, we cannot be sure it is a representative size.
-Because the business model, planning, incentives to pledge, project design or marketing cannot be easily quantified we are not sure if any of those factors could have improved the success rate. A comment section or testimonials on each project could have offered better insights to predict success or if it is statistically relevant.
-Rate or date in which pledges were made to see how long it took for a campaign to pick up and meet its goal. There might be a correlation on how long it took campaigns to meet goals vs. ones that didn’t.
-Campaigns with actual products, cost of production vs. cost of pledge/donation. Profit margin.
-
-# Observations 
-
-Drilling deeper into certain data points it would be interesting to see, within countries, the outcome trends by state, region or etc. This would allow us to observe which geographical areas have the highest rates of success and which ones have the lowest rate of success and possibly gather trends.
-It would be fascinating to see who or what determined why the goal amount was set the way it was as well as the duration of the campaign (i.e. launch vs. deadline). It is highly likely that KickStarter campaigns would be more successful with a smaller goal amount and longer campaign duration, or even launching at a time of year that is more favorable to that category/sub-category.
-It would also be interesting to discover what happened to those companies/campaigns after KickStarter. Success in one arena does not mean overall continued or lasting success.
-Perhaps, average donation by category to help people decide what they should set their goals at.
-Maybe even growth year over year by category.
+# A Mystery in Two Parts
 
 
+## Background
+
+Conduct a research project on employees of the corporation from the 1980s and 1990s. All that remain of the database of employees from that period are six CSV files.
+
+Design the tables to hold data in the CSVs, import the CSVs into a SQL database, and answer questions about the data. In other words, perform the following:
+1. Data Modeling
+2. Data Engineering
+3. Data Analysis
 
 
+## Objectives
 
+### Data Modeling
+Inspect the CSVs and sketch out an ERD of the tables using QuickDBD
+
+![](Images/Entity%20Relationship%20Diagram%20(ERD).png)
+
+### Data Engineering
+* Use the information to create a table schema for each of the six CSV files. Remember to specify data types, primary keys, foreign keys, and other constraints.
+* Import each CSV file into the corresponding SQL table.
+
+```
+-- Data Engineering --
+-- Drop Tables if Existing
+DROP TABLE IF EXISTS departments;
+DROP TABLE IF EXISTS dept_emp;
+DROP TABLE IF EXISTS dept_manager;
+DROP TABLE IF EXISTS employees;
+DROP TABLE IF EXISTS salaries;
+DROP TABLE IF EXISTS titles;
+
+-- Exported from QuickDBD: Specifying Data Types, Primary Keys & Foreign Keys 
+-- Import CSV Files Into Corresponding SQL Table
+CREATE TABLE "departments" (
+    "dept_no" VARCHAR   NOT NULL,
+    "dept_name" VARCHAR   NOT NULL,
+    CONSTRAINT "pk_departments" PRIMARY KEY (
+        "dept_no"
+     )
+);
+
+CREATE TABLE "dept_emp" (
+    "emp_no" INT   NOT NULL,
+    "dept_no" VARCHAR   NOT NULL,
+    "from_date" DATE   NOT NULL,
+    "to_date" DATE   NOT NULL
+);
+
+CREATE TABLE "dept_manager" (
+    "dept_no" VARCHAR   NOT NULL,
+    "emp_no" INT   NOT NULL,
+    "from_date" DATE   NOT NULL,
+    "to_date" DATE   NOT NULL
+);
+
+CREATE TABLE "employees" (
+    "emp_no" INT   NOT NULL,
+    "birth_date" DATE   NOT NULL,
+    "first_name" VARCHAR   NOT NULL,
+    "last_name" VARCHAR   NOT NULL,
+    "gender" VARCHAR   NOT NULL,
+    "hire_date" DATE   NOT NULL,
+    CONSTRAINT "pk_employees" PRIMARY KEY (
+        "emp_no"
+     )
+);
+
+CREATE TABLE "salaries" (
+    "emp_no" INT   NOT NULL,
+    "salary" INT   NOT NULL,
+    "from_date" DATE   NOT NULL,
+    "to_date" DATE   NOT NULL
+);
+
+CREATE TABLE "titles" (
+    "emp_no" INT   NOT NULL,
+    "title" VARCHAR   NOT NULL,
+    "from_date" DATE   NOT NULL,
+    "to_date" DATE   NOT NULL
+);
+
+ALTER TABLE "dept_emp" ADD CONSTRAINT "fk_dept_emp_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
+
+ALTER TABLE "dept_emp" ADD CONSTRAINT "fk_dept_emp_dept_no" FOREIGN KEY("dept_no")
+REFERENCES "departments" ("dept_no");
+
+ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_dept_no" FOREIGN KEY("dept_no")
+REFERENCES "departments" ("dept_no");
+
+ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
+
+ALTER TABLE "salaries" ADD CONSTRAINT "fk_salaries_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
+
+ALTER TABLE "titles" ADD CONSTRAINT "fk_titles_emp_no" FOREIGN KEY("emp_no")
+REFERENCES "employees" ("emp_no");
+
+-- Query * FROM Each Table Confirming Data
+SELECT * FROM departments;
+SELECT * FROM dept_emp;
+SELECT * FROM dept_manager;
+SELECT * FROM employees;
+SELECT * FROM salaries;
+SELECT * FROM titles;
+```
+
+### Data Analysis
+Once there is a complete database, do the following:
+
+1. List the following details of each employee: employee number, last name, first name, gender, and salary.
+```
+SELECT employees.emp_no, employees.last_name, employees.first_name, employees.gender, salaries.salary
+FROM employees
+JOIN salaries
+ON employees.emp_no = salaries.emp_no;
+```
+
+2. List employees who were hired in 1986.
+```
+SELECT first_name, last_name, hire_date 
+FROM employees
+WHERE hire_date BETWEEN '1986-01-01' AND '1987-01-01';
+```
+
+3. List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name, and start and end employment dates.
+```
+SELECT departments.dept_no, departments.dept_name, dept_manager.emp_no, employees.last_name, employees.first_name, dept_manager.from_date, dept_manager.to_date
+FROM departments
+JOIN dept_manager
+ON departments.dept_no = dept_manager.dept_no
+JOIN employees
+ON dept_manager.emp_no = employees.emp_no;
+```
+
+4. List the department of each employee with the following information: employee number, last name, first name, and department name.
+```
+SELECT dept_emp.emp_no, employees.last_name, employees.first_name, departments.dept_name
+FROM dept_emp
+JOIN employees
+ON dept_emp.emp_no = employees.emp_no
+JOIN departments
+ON dept_emp.dept_no = departments.dept_no;
+```
+
+5. List all employees whose first name is "Hercules" and last names begin with "B."
+```
+SELECT first_name, last_name
+FROM employees
+WHERE first_name = 'Hercules'
+AND last_name LIKE 'B%';
+```
+
+6. List all employees in the Sales department, including their employee number, last name, first name, and department name.
+```
+SELECT dept_emp.emp_no, employees.last_name, employees.first_name, departments.dept_name
+FROM dept_emp
+JOIN employees
+ON dept_emp.emp_no = employees.emp_no
+JOIN departments
+ON dept_emp.dept_no = departments.dept_no
+WHERE departments.dept_name = 'Sales';
+```
+
+7. List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
+```
+SELECT dept_emp.emp_no, employees.last_name, employees.first_name, departments.dept_name
+FROM dept_emp
+JOIN employees
+ON dept_emp.emp_no = employees.emp_no
+JOIN departments
+ON dept_emp.dept_no = departments.dept_no
+WHERE departments.dept_name = 'Sales' 
+OR departments.dept_name = 'Development';
+```
+
+8. In descending order, list the frequency count of employee last names, i.e., how many employees share each last name.
+```
+SELECT last_name,
+COUNT(last_name) AS "frequency"
+FROM employees
+GROUP BY last_name
+ORDER BY
+COUNT(last_name) DESC;
+```
+
+### Bonus
+Generate a visualization of the data by:
+
+1. Importing the SQL database into Pandas.
+2. Create a bar chart of average salary by title.
+3. Include a technical report in markdown format, in which the data engineering steps are outlined.
+
+![](Images/average_salary_by_title.png)
